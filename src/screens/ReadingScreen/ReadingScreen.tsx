@@ -3,13 +3,17 @@ import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button, ScrollView, Text, View } from "react-native";
 import { parts } from "../../downloading/FightClub";
 import { styles } from "./styles";
-import { OriginalPart, TranslationPart } from "./components";
 import { NativeSyntheticEvent } from "react-native/Libraries/Types/CoreEventTypes";
 import { NativeScrollEvent } from "react-native/Libraries/Components/ScrollView/ScrollView";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { throttle } from "../../helpers/throttle";
+import OriginalPart from "./components/OriginalPart";
+import TranslationPart from "./components/TranslationPart";
+import TopBar from "./components/TopBar";
+import Pagination from "./components/Pagination";
 
-interface ReadingScreenProps {}
+interface ReadingScreenProps {
+}
 
 const ReadingScreen: FC<ReadingScreenProps> = () => {
   const start = performance.now();
@@ -20,7 +24,7 @@ const ReadingScreen: FC<ReadingScreenProps> = () => {
   const [isLoadingTranslation, setIsLoadingTranslation] = useState<boolean>(false);
   const [loadedWordTranslation, setLoadedWordTranslation] = useState<null | string>(null);
 
-  const activeWordObj = activeWordIndex ? activePage.tokens1[activeWordIndex] : null;
+  const activeWordObj = (typeof activeWordIndex === "number") ? activePage.tokens1[activeWordIndex] : null;
   const activeWordTranslationIndex = activeWordObj ? activeWordObj[3] : null;
   const translationRef = useRef<ScrollView | null>(null);
   const originRef = useRef<ScrollView | null>(null);
@@ -36,13 +40,8 @@ const ReadingScreen: FC<ReadingScreenProps> = () => {
       y: (typeof position === "number")
         ? position + translationScroll.current - 100
         : translationScroll.current - (offset * 5)
-      // y: position
     });
   }, []);
-
-  // const handleScrollTranslation = useMemo(() => throttle((e: NativeSyntheticEvent<NativeScrollEvent>) => {
-  //   translationScroll.current = e.nativeEvent.contentOffset.x;
-  // }, 0), []);
 
   const handleScrollTranslation = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
     translationScroll.current = e.nativeEvent.contentOffset.x;
@@ -71,14 +70,6 @@ const ReadingScreen: FC<ReadingScreenProps> = () => {
       text={`${a}${c}`.replaceAll("\n", " ")}
     />);
   }, [activePage, activeWordTranslationIndex]);
-
-  const handlePreviousPage = useCallback(() => {
-    setCurrentPage(current => current - 1);
-  }, []);
-
-  const handleNextPage = useCallback(() => {
-    setCurrentPage(current => current + 1);
-  }, []);
 
   const handleSaveDataToCache = useCallback(async (page: number, originScroll: number) => {
     if (!isPositionReaded) return;
@@ -111,6 +102,7 @@ const ReadingScreen: FC<ReadingScreenProps> = () => {
 
       if (data) {
         const { page, originScroll } = JSON.parse(data);
+        console.log("readed: ", { page, originScroll })
         setCurrentPage(page)
         originRef.current?.scrollTo({ y: originScroll, animated: true })
       }
@@ -120,17 +112,25 @@ const ReadingScreen: FC<ReadingScreenProps> = () => {
 
   const end = performance.now()
 
-  console.log("all time: ",end - start)
+  console.log("all time: ", end - start)
   return (
     <View style={styles.container}>
-      <ScrollView
-        horizontal
-        style={styles.translation}
-        ref={translationRef}
-        onScroll={handleScrollTranslation}
-      >
-        {translation}
-      </ScrollView>
+      <TopBar
+        activeWordIndex={activeWordIndex}
+        setActiveWordIndex={setActiveWordIndex}
+      />
+      {
+        activeWordObj
+          ? <ScrollView
+            horizontal
+            style={styles.translation}
+            ref={translationRef}
+            onScroll={handleScrollTranslation}
+          >
+            {translation}
+          </ScrollView>
+          : null
+      }
       {
         activeWordObj
           ? <Text style={styles.wordTranslation}>
@@ -147,22 +147,11 @@ const ReadingScreen: FC<ReadingScreenProps> = () => {
           {original}
         </Text>
       </ScrollView>
-      <View style={styles.pagination}>
-        <Button
-          title={"previous"}
-          disabled={currentPage < 1}
-          onPress={handlePreviousPage}
-        />
-        <Text style={{ fontSize: 30 }}>
-          {currentPage + 1} / {parts.length}
-        </Text>
-        <Button
-          title={"next"}
-          disabled={currentPage >= parts.length}
-          onPress={handleNextPage}
-        />
-      </View>
-
+      <Pagination
+        setCurrentPage={setCurrentPage}
+        currentPage={currentPage}
+        totalPages={parts.length}
+      />
     </View>
   );
 };

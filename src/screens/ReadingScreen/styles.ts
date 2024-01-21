@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     height: 50,
     borderBottomWidth: 2,
     borderBottomColor: "rgba(122, 122, 122, .5)",
-    position: "absolute",
+    // position: "absolute",
     paddingTop: 20,
     top: 0,
     left: 0,
@@ -22,15 +22,15 @@ export const styles = StyleSheet.create({
     backgroundColor: "#fff"
   },
   wordTranslation: {
-    position: "absolute",
-    top: 50,
+    // position: "absolute",
+    // top: 50,
     width: "100%",
     zIndex: 10,
     backgroundColor: "#fff",
     paddingHorizontal: 5
   },
   original: {
-    marginTop: 50,
+    // marginTop: 50,
     fontSize: 25,
     zIndex: 9
   },
