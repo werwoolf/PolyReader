@@ -17,11 +17,10 @@ const TopBar: FC<TopBarProps> = ({
       flexDirection: "row",
       justifyContent: "space-between",
       alignContent: "center",
-      paddingHorizontal: 20,
-      height: 35
+      paddingHorizontal: 20
     }}>
       <Text style={{ fontWeight: "900", fontSize: 30 }}>{"⇦"}</Text>
-      <Text style={{ fontWeight: "900", fontSize: 20 }}>
+      <Text style={{ fontWeight: "900", fontSize: 20, alignSelf:"center" }}>
         {"Book name"}
       </Text>
       {
@@ -34,7 +33,7 @@ const TopBar: FC<TopBarProps> = ({
           >
             ⇧
         </Text>
-          : null
+          : <Text style={{width: 40}}></Text>
       }
     </View>
   );

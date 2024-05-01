@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingLeft: 5,
     paddingRight: 5,
-    paddingTop: 20,
+    // paddingTop: 20,
     marginTop: 40,
     position: "relative"
   },
@@ -14,7 +14,6 @@ export const styles = StyleSheet.create({
     height: 50,
     borderBottomWidth: 2,
     borderBottomColor: "rgba(122, 122, 122, .5)",
-    // position: "absolute",
     paddingTop: 20,
     top: 0,
     left: 0,
@@ -22,15 +21,12 @@ export const styles = StyleSheet.create({
     backgroundColor: "#fff"
   },
   wordTranslation: {
-    // position: "absolute",
-    // top: 50,
     width: "100%",
     zIndex: 10,
     backgroundColor: "#fff",
     paddingHorizontal: 5
   },
   original: {
-    // marginTop: 50,
     fontSize: 25,
     zIndex: 9
   },
@@ -38,6 +34,6 @@ export const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 30
+    padding: 10
   }
 });
