@@ -1,41 +1,30 @@
 import * as React from "react";
-import { FC, useRef, useState } from "react";
-import { ScrollView, Text, View, Button } from "react-native";
+import { FC, useMemo, useRef } from "react";
+import { ScrollView, Text, View } from "react-native";
 import { styles } from "./styles";
 import TopBar from "./components/TopBar";
-import * as DocumentPicker from 'expo-document-picker';
-import * as FileSystem from 'expo-file-system';
+import { useParams } from "react-router-native";
+import { Book } from "../../store/books/types";
 
 interface ReadingScreenProps {
+  books: Book[]
 }
 
-const ReadingScreen: FC<ReadingScreenProps> = () => {
-  const [activeWordIndex, setActiveWordIndex] = useState<null | number>(null);
-  const [text, setText] = useState("");
+const ReadingScreen: FC<ReadingScreenProps> = ({ books }) => {
+  const { id } = useParams();
 
   const originRef = useRef<ScrollView | null>(null);
 
-  const pickFile = async () => {
-    try {
-      const res = await DocumentPicker.getDocumentAsync();
-      const { assets } = res;
+  const { text, bookName } = useMemo(() => {
+    if (!id) return { text: "", bookName: "" };
+    const book = books.find((book) => book.id === +id);
 
-      if (assets) {
-        const uri = assets[0].uri;
-        const read = await FileSystem.readAsStringAsync(uri);
-        setText(read)
-      }
-    } catch (err) {
-      console.log("ERROR: ", err)
-    }
-  };
-
+    return { text: book?.text || "", bookName: book?.name || "" };
+  }, [id]);
   return (
     <View style={styles.container}>
-      <TopBar
-        activeWordIndex={activeWordIndex}
-        setActiveWordIndex={setActiveWordIndex}
-      />
+      <TopBar bookName={bookName}/>
+      <Text>ID: {id}</Text>
       <ScrollView
         style={styles.original}
         ref={originRef}
@@ -43,12 +32,6 @@ const ReadingScreen: FC<ReadingScreenProps> = () => {
         <Text style={{ fontSize: 25 }}>
           {text}
         </Text>
-        <Button
-          title="select"
-          onPress={pickFile}
-        >
-          Click
-        </Button>
       </ScrollView>
     </View>
   );

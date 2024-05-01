@@ -1,16 +1,15 @@
 import * as React from "react";
 import { FC } from "react";
 import { Text, View } from "react-native";
+import { useNavigate } from "react-router-native";
+import { ROUTES_PATH } from "../../../../defaults/ROUTES_PATH";
 
 interface TopBarProps {
-  activeWordIndex: number | null;
-  setActiveWordIndex: (index: number | null) => void;
+  bookName: string
 }
 
-const TopBar: FC<TopBarProps> = ({
-                                   activeWordIndex,
-                                   setActiveWordIndex
-                                 }) => {
+const TopBar: FC<TopBarProps> = ({ bookName }) => {
+  const navigate = useNavigate();
   return (
     <View style={{
       display: "flex",
@@ -19,22 +18,15 @@ const TopBar: FC<TopBarProps> = ({
       alignContent: "center",
       paddingHorizontal: 20
     }}>
-      <Text style={{ fontWeight: "900", fontSize: 30 }}>{"⇦"}</Text>
-      <Text style={{ fontWeight: "900", fontSize: 20, alignSelf:"center" }}>
-        {"Book name"}
+      <Text
+        style={{ fontWeight: "900", fontSize: 30 }}
+        onPress={()=> navigate(ROUTES_PATH.main)}
+      >
+        {"⇦"}
       </Text>
-      {
-        activeWordIndex
-          ? <Text
-            style={{ fontWeight: "900", fontSize: 30, paddingHorizontal: 15 }}
-            onPress={() => {
-              setActiveWordIndex(null)
-            }}
-          >
-            ⇧
-        </Text>
-          : <Text style={{width: 40}}></Text>
-      }
+      <Text style={{ fontWeight: "900", fontSize: 20, alignSelf:"center" }}>
+        {bookName}
+      </Text>
     </View>
   );
 };
