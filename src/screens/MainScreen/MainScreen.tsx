@@ -1,23 +1,19 @@
 import * as React from "react";
 import { FC, useCallback, useEffect } from "react";
 import { Button, View, Text } from "react-native";
-import { useNavigate } from "react-router-native";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
-import { ROUTES_PATH } from "../../defaults/ROUTES_PATH";
-import { Book } from "../../store/books/types";
 import { addBook } from "../../store/books/asyncActions";
 import { HandleThunkActionCreator } from "react-redux";
+import { styles } from "./styles";
+import Books from "./components/Books";
 
 interface MainScreenProps {
-  books: Book[],
   getBooks: () => void;
   addBook: HandleThunkActionCreator<typeof addBook>
 }
 
-const MainScreen: FC<MainScreenProps> = ({ books, getBooks, addBook }) => {
-  const navigate = useNavigate();
-
+const MainScreen: FC<MainScreenProps> = ({ getBooks, addBook }) => {
   useEffect(() => {
     getBooks()
   }, []);
@@ -40,32 +36,9 @@ const MainScreen: FC<MainScreenProps> = ({ books, getBooks, addBook }) => {
     }
   }, [addBook, getBooks]);
   return (
-    <View style={{
-      padding: 10,
-      paddingTop: 40,
-      display: "flex",
-      gap: 20
-    }}>
+    <View style={styles.container}>
       <Text>MainScreen</Text>
-
-      <View style={{ display: "flex", flexDirection: "row", gap: 10 }}>
-        {
-          books.map((book, index) => <View
-            key={index}
-            style={{
-              width: 100,
-              height: 200,
-              borderStyle: "solid",
-              borderColor: "grey",
-              borderWidth: 1
-            }}
-            onTouchStart={() => navigate(ROUTES_PATH.bookReading(book.id.toString()))}
-          >
-            <Text>{book.name}</Text>
-          </View>)
-        }
-      </View>
-
+      <Books/>
       <Button
         title="Add book"
         onPress={pickFile}

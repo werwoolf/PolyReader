@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FC, useEffect, useMemo, useRef } from "react";
+import { FC, useEffect, useRef } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { styles } from "./styles";
 import TopBar from "./components/TopBar";
