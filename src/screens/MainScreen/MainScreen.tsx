@@ -17,6 +17,7 @@ interface MainScreenProps {
 
 const MainScreen: FC<MainScreenProps> = ({ books, getBooks, addBook }) => {
   const navigate = useNavigate();
+
   useEffect(() => {
     getBooks()
   }, []);
