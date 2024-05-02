@@ -13,3 +13,14 @@ export const getBook = createAsyncThunk<Book | null, number>(
     return get(res, "0.rows.0", null);
   }
 );
+
+export const deleteBook = createAsyncThunk<Book | null, number>(
+  "delete_book",
+  async (id) => {
+    const res = await db.execAsync(
+      [{ sql: "DELETE FROM books WHERE id = ?;", args: [id] }], false
+    );
+
+    return get(res, "0.rowsAffected", null);
+  }
+);

@@ -3,16 +3,17 @@ import { FC, useCallback, useEffect } from "react";
 import { View, Text, Button } from "react-native";
 import { useNavigate, useParams } from "react-router-native";
 import { HandleThunkActionCreator } from "react-redux";
-import { getBook } from "../../store/book/asyncActions";
+import { deleteBook, getBook } from "../../store/book/asyncActions";
 import { Book } from "../../store/books/types";
 import { ROUTES_PATH } from "../../defaults/ROUTES_PATH";
 
 interface BookScreenProps {
   book: Book | null;
   getBook: HandleThunkActionCreator<typeof getBook>;
+  deleteBook: HandleThunkActionCreator<typeof deleteBook>
 }
 
-const BookScreen: FC<BookScreenProps> = ({ book, getBook }) => {
+const BookScreen: FC<BookScreenProps> = ({ book, deleteBook, getBook }) => {
   const { id } = useParams();
   const navigate = useNavigate()
 
@@ -24,6 +25,13 @@ const BookScreen: FC<BookScreenProps> = ({ book, getBook }) => {
 
   const handleGoToReadBook = useCallback(() => {
     navigate(ROUTES_PATH.bookReading(id))
+  }, [])
+
+  const handleDeleteBook = useCallback(async () => {
+    if (id) {
+      await deleteBook(+id);
+      navigate(ROUTES_PATH.main)
+    }
   }, [])
 
   if (!book) return <Text>"...loading"</Text>
@@ -42,7 +50,7 @@ const BookScreen: FC<BookScreenProps> = ({ book, getBook }) => {
       <Button
         title="Delete"
         color="red"
-        // onPress={handleGoToReadBook}
+        onPress={handleDeleteBook}
       />
       <Button
         title="Read"
