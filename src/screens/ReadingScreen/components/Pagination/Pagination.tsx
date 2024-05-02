@@ -1,40 +1,44 @@
 import * as React from "react";
-import { Dispatch, FC, SetStateAction, useCallback } from "react";
+import { FC, useCallback } from "react";
 import { Button, Text, View } from "react-native";
 import { styles } from "../../styles";
+import { Pagination as PaginationType } from "../../../../store/book/types";
+import { previousPage, nextPage } from "../../../../store/book/slice";
 
 interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
-  // setCurrentPage: Dispatch<SetStateAction<number>>;
+  pagination: PaginationType;
+  previousPage: typeof previousPage,
+  nextPage: typeof nextPage
 }
 
 const Pagination: FC<PaginationProps> = ({
-                                           currentPage,
-                                           totalPages,
-                                           // setCurrentPage
+                                           pagination,
+                                           nextPage,
+                                           previousPage
                                          }) => {
-  // const handlePreviousPage = useCallback(() => {
-  //   setCurrentPage(current => current - 1);
-  // }, []);
-  //
-  // const handleNextPage = useCallback(() => {
-  //   setCurrentPage(current => current + 1);
-  // }, []);
+  const { currentPage, pages } = pagination;
+
+  const handlePreviousPage = useCallback(()=>{
+    previousPage();
+  }, []);
+
+  const handleNextPage = useCallback(()=>{
+    nextPage();
+  }, []);
   return (
     <View style={styles.pagination}>
       <Button
         title={"previous"}
         disabled={currentPage < 1}
-        // onPress={handlePreviousPage}
+        onPress={handlePreviousPage}
       />
       <Text style={{ fontSize: 30 }}>
-        {currentPage + 1} / {totalPages}
+        {currentPage} / {pages}
       </Text>
       <Button
         title={"next"}
-        disabled={currentPage >= totalPages}
-        // onPress={handleNextPage}
+        disabled={currentPage >= pages}
+        onPress={handleNextPage}
       />
     </View>
   );

@@ -1,5 +1,5 @@
 import { RootState } from "../index";
-import {createSelector} from "@reduxjs/toolkit";
+import { createSelector } from "@reduxjs/toolkit";
 
 export const bookRoot = (state: RootState) => state.book;
 
@@ -10,4 +10,4 @@ export const pagination = createSelector(bookRoot, state => ({
   pages: state.pages.length
 }));
 
-export const currentPageContent = createSelector(bookRoot, state => state.pages[state.currentPage])
+export const currentPageContent = createSelector(bookRoot, state => state.pages[state.currentPage]);

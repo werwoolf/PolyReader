@@ -19,7 +19,7 @@ export const addBook = createAsyncThunk<void, Omit<Book, "id">>(
         args: [book.name, book.text]
       }],
       false
-    )
+    );
   });
 
 

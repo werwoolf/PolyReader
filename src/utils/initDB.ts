@@ -2,7 +2,7 @@ import { openDatabase } from "expo-sqlite";
 
 export const initDB = () =>  {
   const db = openDatabase("books");
-
+  console.log("initDB")
   db.transaction(tx => {
     tx.executeSql(
       'CREATE TABLE IF NOT EXISTS books (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, text TEXT NOT NULL);',
@@ -15,7 +15,7 @@ export const initDB = () =>  {
         return true;
       }
     );
-  })
+  });
 
   return db;
 };

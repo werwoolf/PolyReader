@@ -4,7 +4,7 @@ import { View, Text, Button } from "react-native";
 import { useNavigate, useParams } from "react-router-native";
 import { HandleThunkActionCreator } from "react-redux";
 import { deleteBook, getBook } from "../../store/book/asyncActions";
-import { Book } from "../../store/books/types";
+import { Book } from '../../store/books/types';
 import { ROUTES_PATH } from "../../defaults/ROUTES_PATH";
 
 interface BookScreenProps {

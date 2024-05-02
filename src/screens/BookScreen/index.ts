@@ -4,7 +4,7 @@ import { book } from "../../store/book/selectors";
 import { createStructuredSelector } from "reselect";
 import { connect } from "react-redux";
 
-const mapState = createStructuredSelector({ book })
+const mapState = createStructuredSelector({ book });
 
 const mapDispatch = { getBook, deleteBook };
 

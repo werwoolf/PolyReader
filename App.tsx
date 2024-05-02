@@ -7,7 +7,7 @@ import { Provider } from "react-redux";
 import { store } from "./src/store";
 import BookScreen from "./src/screens/BookScreen";
 
-AppRegistry.registerComponent("appName", () => App)
+AppRegistry.registerComponent('appName', () => App)
 
 export default function App() {
   return <Provider store={store}>

@@ -10,10 +10,11 @@ import Books from "./components/Books";
 
 interface MainScreenProps {
   getBooks: () => void;
+  isLoading: boolean;
   addBook: HandleThunkActionCreator<typeof addBook>
 }
 
-const MainScreen: FC<MainScreenProps> = ({ getBooks, addBook }) => {
+const MainScreen: FC<MainScreenProps> = ({ getBooks, isLoading, addBook }) => {
   useEffect(() => {
     getBooks()
   }, []);
@@ -41,6 +42,7 @@ const MainScreen: FC<MainScreenProps> = ({ getBooks, addBook }) => {
     <View style={styles.container}>
       <Text>MainScreen</Text>
       <Books/>
+      {isLoading && <Text>... loading</Text>}
       <Button
         title="Add book"
         onPress={pickFile}

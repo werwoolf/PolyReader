@@ -6,3 +6,8 @@ export interface BookState {
   currentPage: number;
   isLoading: boolean;
 }
+
+export type Pagination = {
+  pages: number,
+  currentPage: number
+}

@@ -4,7 +4,7 @@ import book from "./book/slice";
 
 const reducer = combineReducers({
   books, book
-})
+});
 
 export const store = configureStore({ reducer });
 
