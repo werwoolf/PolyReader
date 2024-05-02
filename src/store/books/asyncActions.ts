@@ -1,29 +1,25 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { openDatabase } from "expo-sqlite";
-
+import { db } from "../../utils/initDB";
+import { Book } from "./types";
+import get from "lodash/get";
 
 export const getBooks = createAsyncThunk("get_books", async () => {
-  const db = await openDatabase("books");
-  console.log("getBooks")
-  db.transaction(tx => {
-    tx.executeSql(
-      'CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL);',
-      [],
-      (tx, results) => {
-        console.log('Table created successfully');
-        tx.executeSql("INSERT INTO items (name) VALUES (?);", ["ololololo"], (tx, res)=>{
-          console.log(res)
-        })
-        tx.executeSql("SELECT * from items;", [], (tx, res)=>{
-          console.log(res.rows._array)
-        })
-      },
-      (tx, error) => {
-        console.log('Error while creating table:', error);
-      }
-    );
+  const res = await db.execAsync(
+    [{ sql: "SELECT id, name from books;", args: [] }], true
+  );
+  return get(res, "0.rows", []);
+});
+
+export const addBook = createAsyncThunk<void, Omit<Book, "id">>(
+  "add_book_async",
+  async (book) => {
+    await db.execAsync(
+      [{
+        sql: 'INSERT INTO books (name, text) VALUES (?, ?);',
+        args: [book.name, book.text]
+      }],
+      false
+    )
   });
-  // res.execRawQuery([{sql:"SELECT * from books;", args:[]}], true, ()=>{
-  //   console.log("cb")
-  // })
-})
+
+

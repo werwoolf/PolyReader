@@ -6,4 +6,5 @@ export type Book = {
 
 export interface BooksState {
   books: Book[];
+  isLoading: boolean;
 }

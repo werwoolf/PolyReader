@@ -1,33 +1,42 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { CaseReducer, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Book, BooksState } from "./types";
-
-export const booksDefault = [
-  {
-    name: "Fight club",
-    id: 1,
-    text: "fight Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci aspernatur aut beatae commodi cupiditate, fugit, in ipsa ipsam minus obcaecati praesentium quae quas repellendus repudiandae saepe sequi tempora tenetur veniam!"
-  },
-  {
-    name: "Gone by wind",
-    id: 2,
-    text: "gonr Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci aspernatur aut beatae commodi cupiditate, fugit, in ipsa ipsam minus obcaecati praesentium quae quas repellendus repudiandae saepe sequi tempora tenetur veniam!"
-  },
-]
+import { addBook, getBooks } from "./asyncActions";
 
 const initialState: BooksState = {
-  books: booksDefault
+  books: [],
+  isLoading: false
+}
+
+const handleAsyncActionStart: CaseReducer<BooksState> = (state) => {
+  state.isLoading = true;
+}
+const handleAsyncActionRejected: CaseReducer<BooksState> = (state) => {
+  state.isLoading = false;
+}
+
+
+const handleGetBooksFulfilled: CaseReducer<BooksState, PayloadAction<Book[]>> = (state, action) => {
+  state.books = action.payload;
+  state.isLoading = false;
+}
+
+const handleAddBookFulfilled: CaseReducer<BooksState> = (state) => {
+  state.isLoading = false;
 }
 
 const slice = createSlice({
   name: "books",
   initialState,
-  reducers: {
-    addBook: (state, action: PayloadAction<Omit<Book, "id">>) => {
-      state.books.push({ ...action.payload, id: state.books.length + 1 })
-    }
+  reducers: {},
+  extraReducers: builder => {
+    builder.addCase(getBooks.pending, handleAsyncActionStart)
+    builder.addCase(getBooks.fulfilled, handleGetBooksFulfilled)
+    builder.addCase(getBooks.rejected,handleAsyncActionRejected)
+
+    builder.addCase(addBook.pending, handleAsyncActionStart)
+    builder.addCase(addBook.fulfilled, handleAddBookFulfilled)
+    builder.addCase(addBook.rejected, handleAsyncActionRejected)
   }
 });
 
 export default slice.reducer;
-
-export const { addBook } = slice.actions;

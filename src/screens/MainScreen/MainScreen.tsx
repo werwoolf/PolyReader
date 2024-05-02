@@ -6,20 +6,18 @@ import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import { ROUTES_PATH } from "../../defaults/ROUTES_PATH";
 import { Book } from "../../store/books/types";
-import { addBook } from "../../store/books/slice";
+import { addBook } from "../../store/books/asyncActions";
+import { HandleThunkActionCreator } from "react-redux";
 
 interface MainScreenProps {
   books: Book[],
   getBooks: () => void;
-  addBook: typeof addBook
+  addBook: HandleThunkActionCreator<typeof addBook>
 }
 
 const MainScreen: FC<MainScreenProps> = ({ books, getBooks, addBook }) => {
   const navigate = useNavigate();
-
   useEffect(() => {
-    console.log("///")
-
     getBooks()
   }, []);
 
@@ -33,12 +31,13 @@ const MainScreen: FC<MainScreenProps> = ({ books, getBooks, addBook }) => {
         const name = assets[0].name;
         const text = await FileSystem.readAsStringAsync(uri);
 
-        addBook({ text, name })
+        await addBook({ text, name });
+        getBooks();
       }
     } catch (err) {
       console.log("ERROR: ", err)
     }
-  }, []);
+  }, [addBook, getBooks]);
   return (
     <View style={{
       padding: 10,
