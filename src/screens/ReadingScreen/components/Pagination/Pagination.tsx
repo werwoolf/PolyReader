@@ -6,27 +6,27 @@ import { styles } from "../../styles";
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
-  setCurrentPage: Dispatch<SetStateAction<number>>;
+  // setCurrentPage: Dispatch<SetStateAction<number>>;
 }
 
 const Pagination: FC<PaginationProps> = ({
                                            currentPage,
                                            totalPages,
-                                           setCurrentPage
+                                           // setCurrentPage
                                          }) => {
-  const handlePreviousPage = useCallback(() => {
-    setCurrentPage(current => current - 1);
-  }, []);
-
-  const handleNextPage = useCallback(() => {
-    setCurrentPage(current => current + 1);
-  }, []);
+  // const handlePreviousPage = useCallback(() => {
+  //   setCurrentPage(current => current - 1);
+  // }, []);
+  //
+  // const handleNextPage = useCallback(() => {
+  //   setCurrentPage(current => current + 1);
+  // }, []);
   return (
     <View style={styles.pagination}>
       <Button
         title={"previous"}
         disabled={currentPage < 1}
-        onPress={handlePreviousPage}
+        // onPress={handlePreviousPage}
       />
       <Text style={{ fontSize: 30 }}>
         {currentPage + 1} / {totalPages}
@@ -34,7 +34,7 @@ const Pagination: FC<PaginationProps> = ({
       <Button
         title={"next"}
         disabled={currentPage >= totalPages}
-        onPress={handleNextPage}
+        // onPress={handleNextPage}
       />
     </View>
   );

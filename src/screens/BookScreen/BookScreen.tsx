@@ -34,18 +34,30 @@ const BookScreen: FC<BookScreenProps> = ({ book, deleteBook, getBook }) => {
     }
   }, [])
 
-  if (!book) return <Text>"...loading"</Text>
+  // if (!book) return <Text>"...loading"</Text>
   return (
     <View style={{
-      padding: 10, paddingTop: 50, display: "flex", flexDirection: "column", gap: 10
+      padding: 15, paddingTop: 50, display: "flex", flexDirection: "column", gap: 10
     }}>
-      <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-        {book.name}
-      </Text>
-      <View>
-        <Text style={{ fontWeight: "bold" }}>
-          Size: {Math.ceil(book.text.length / 1024)} kb
+      <View style={{display: "flex", flexDirection:"row"}}>
+        <Text
+          style={{ fontWeight: "900", fontSize: 30 }}
+          onPress={() => navigate(ROUTES_PATH.main)}
+        >
+          {"⇦"}
         </Text>
+        <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+          {book?.name}
+        </Text>
+      </View>
+
+      <View>
+        {
+          book && <Text style={{ fontWeight: "bold" }}>
+            Size: {Math.ceil(book.text.length / 1024)} kb
+          </Text>
+        }
+
       </View>
       <Button
         title="Delete"

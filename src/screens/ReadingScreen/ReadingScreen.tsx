@@ -1,32 +1,37 @@
 import * as React from "react";
-import { FC, useEffect, useRef } from "react";
+import { FC, useRef } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { styles } from "./styles";
 import TopBar from "./components/TopBar";
 import { useParams } from "react-router-native";
-import { Book } from "../../store/books/types";
+import Pagination from "./components/Pagination";
 
 interface ReadingScreenProps {
-  book: Book | null;
-
+  currentPageContent: string,
+  pagination: {  currentPage: number, pages: number}
 }
 
-const ReadingScreen: FC<ReadingScreenProps> = ({ book }) => {
+const ReadingScreen: FC<ReadingScreenProps> = ({ currentPageContent, pagination }) => {
   const originRef = useRef<ScrollView | null>(null);
   const { id } = useParams();
 
-  if (!book) return <Text>"...loading"</Text>;
+  // if (!book) return <Text>"...loading"</Text>;
   return (
     <View style={styles.container}>
-      <TopBar bookName={book.name}/>
+      <TopBar bookName={""}/>
       <Text>ID: {id}</Text>
       <ScrollView
         style={styles.original}
         ref={originRef}
       >
         <Text style={{ fontSize: 25 }}>
-          {book.text}
+          {currentPageContent}
         </Text>
+        <Pagination
+          currentPage={pagination.currentPage}
+          totalPages={pagination.pages}
+          setCurrentPage={}
+        />
       </ScrollView>
     </View>
   );
