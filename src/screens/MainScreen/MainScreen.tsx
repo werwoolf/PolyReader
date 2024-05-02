@@ -20,10 +20,12 @@ const MainScreen: FC<MainScreenProps> = ({ getBooks, addBook }) => {
 
   const pickFile = useCallback(async () => {
     try {
-      const res = await DocumentPicker.getDocumentAsync({ multiple: false });
-      const { assets } = res;
+      const res = await DocumentPicker.getDocumentAsync({
+        multiple: false, type: "text/plain"
+      });
+      const { assets, canceled } = res;
 
-      if (assets) {
+      if (assets && !canceled) {
         const uri = assets[0].uri;
         const name = assets[0].name;
         const text = await FileSystem.readAsStringAsync(uri);

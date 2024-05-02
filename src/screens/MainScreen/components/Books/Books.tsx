@@ -21,7 +21,7 @@ const Books: FC<BooksProps> = ({ books }) => {
         books.map((book, index) => <TouchableOpacity
           key={index}
           style={styles.book}
-          onPress={() => navigate(ROUTES_PATH.bookReading(book.id.toString()))}
+          onPress={() => navigate(ROUTES_PATH.book(book.id.toString()))}
           // onTouchEnd={() => navigate(ROUTES_PATH.bookReading(book.id.toString()))}
         >
           <Text>{book.name}</Text>

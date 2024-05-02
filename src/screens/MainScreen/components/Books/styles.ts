@@ -5,6 +5,7 @@ export const styles = StyleSheet.create({
   book: {
     width: 100,
     height: 200,
+    padding: 5,
     borderStyle: "solid",
     borderColor: "grey",
     borderWidth: 1

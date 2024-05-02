@@ -5,6 +5,7 @@ import MainScreen from "./src/screens/MainScreen";
 import { ROUTES_PATH } from "./src/defaults/ROUTES_PATH";
 import { Provider } from "react-redux";
 import { store } from "./src/store";
+import BookScreen from "./src/screens/BookScreen";
 
 AppRegistry.registerComponent("appName", () => App)
 
@@ -13,6 +14,7 @@ export default function App() {
     <NativeRouter>
       <Routes>
         <Route path={ROUTES_PATH.main} Component={MainScreen}/>
+        <Route path={ROUTES_PATH.book()} Component={BookScreen}/>
         <Route path={ROUTES_PATH.bookReading()} Component={ReadingScreen}/>
       </Routes>
     </NativeRouter>

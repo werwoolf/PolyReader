@@ -5,25 +5,17 @@ import { styles } from "./styles";
 import TopBar from "./components/TopBar";
 import { useParams } from "react-router-native";
 import { Book } from "../../store/books/types";
-import { HandleThunkActionCreator } from "react-redux";
-import { getBook } from "../../store/book/asyncActions";
 
 interface ReadingScreenProps {
   book: Book | null;
-  getBook: HandleThunkActionCreator<typeof getBook>
+
 }
 
-const ReadingScreen: FC<ReadingScreenProps> = ({ book, getBook }) => {
+const ReadingScreen: FC<ReadingScreenProps> = ({ book }) => {
   const originRef = useRef<ScrollView | null>(null);
   const { id } = useParams();
 
-  useEffect(() => {
-    if (id) {
-      getBook(+id)
-    }
-  }, []);
-
-  if (!book) return <Text>"...loading"</Text>
+  if (!book) return <Text>"...loading"</Text>;
   return (
     <View style={styles.container}>
       <TopBar bookName={book.name}/>

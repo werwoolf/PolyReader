@@ -1,4 +1,5 @@
 export const ROUTES_PATH = {
   main: "/",
-  bookReading: (id = ":id") => `/book/reading/${id}`
+  book: (id = ":id") => `/book/${id}`,
+  bookReading: (id = ":id") => `/book/${id}/reading`
 };
