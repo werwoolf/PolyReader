@@ -105,15 +105,7 @@ const ReadingScreen: FC<ReadingScreenProps> = ({ currentPageContent }) => {
     <View style={styles.container}>
       {
         (isTranslation || (translatedWord && activeWord)) && <View
-          style={{
-            width: "100%",
-            paddingVertical: 10,
-            paddingHorizontal: 5,
-            borderStyle: "solid",
-            borderColor: "grey",
-            borderWidth: 2,
-            backgroundColor: "#ccc"
-          }}
+          style={styles.translation}
         >
           <Text style={{ fontSize: 18 }}>
             {
@@ -125,7 +117,6 @@ const ReadingScreen: FC<ReadingScreenProps> = ({ currentPageContent }) => {
         </View>
       }
       <TopBar bookName={""}/>
-      <Text>ID: {id}</Text>
       <ScrollView>
         <Text style={{ fontSize: 25 }}>
           {parsedPageContent}

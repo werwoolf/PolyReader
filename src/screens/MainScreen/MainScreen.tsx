@@ -7,6 +7,7 @@ import { addBook } from "../../store/books/asyncActions";
 import { HandleThunkActionCreator } from "react-redux";
 import { styles } from "./styles";
 import Books from "./components/Books";
+import Navigation from "../../components/Navigation";
 
 interface MainScreenProps {
   getBooks: () => void;
@@ -40,13 +41,18 @@ const MainScreen: FC<MainScreenProps> = ({ getBooks, isLoading, addBook }) => {
   }, [addBook, getBooks]);
   return (
     <View style={styles.container}>
-      <Text>MainScreen</Text>
-      <Books/>
-      {isLoading && <Text>... loading</Text>}
-      <Button
-        title="Add book"
-        onPress={pickFile}
-      />
+      <View style={{
+        display:"flex", gap: 20
+      }}>
+        <Text>MainScreen</Text>
+        <Books/>
+        {isLoading && <Text>... loading</Text>}
+        <Button
+          title="Add book"
+          onPress={pickFile}
+        />
+      </View>
+      <Navigation/>
     </View>
   );
 };

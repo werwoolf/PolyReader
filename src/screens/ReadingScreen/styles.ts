@@ -11,5 +11,14 @@ export const styles = StyleSheet.create({
   },
   original: {
     fontSize: 25
+  },
+  translation:{
+    width: "100%",
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    borderStyle: "solid",
+    borderColor: "grey",
+    borderWidth: 2,
+    backgroundColor: "#ccc"
   }
 });
