@@ -2,13 +2,15 @@ import * as React from "react";
 import { FC } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { navItems } from "./data";
-import { useNavigate } from "react-router-native";
+import { useLocation, useNavigate } from "react-router-native";
 
 interface NavigationProps {
 }
 
 const Navigation: FC<NavigationProps> = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
   return (
     <View style={{
       display: "flex",
@@ -16,11 +18,18 @@ const Navigation: FC<NavigationProps> = () => {
       justifyContent: "space-between"
     }}>
       {
-        navItems.map(({ icon, path }) => <TouchableOpacity
+        navItems.map(({ icon: Icon, name, path }) => <TouchableOpacity
           key={path}
           onPress={() => navigate(path)}
         >
-          {icon}
+          <Icon
+            name={name}
+            size={26}
+            color={path === pathname
+              ? "black"
+              : "grey"
+          }
+          />
         </TouchableOpacity>)
       }
     </View>
