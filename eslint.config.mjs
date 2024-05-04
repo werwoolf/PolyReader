@@ -1,10 +1,10 @@
-import tsParser from "@typescript-eslint/parser"
+// import tsParser from "@typescript-eslint/parser"
 export default [
   {
     files: ["src/**/*.js", "src/**/*.ts", "src/**/*.tsx"],
-    languageOptions: {
-      parser: tsParser
-    },
+    // languageOptions: {
+    //   parser: tsParser
+    // },
     rules: {
       semi: "error"
     }
