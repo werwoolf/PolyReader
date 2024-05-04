@@ -7,7 +7,7 @@ interface TextTokenProps {
   isActive: boolean;
   isWord: boolean;
   index: number;
-  onSetActiveIndex: (index: number) => void;
+  onSetActiveIndex: (index: number | null) => void;
 }
 
 const TextToken: FC<TextTokenProps> = ({
@@ -19,9 +19,9 @@ const TextToken: FC<TextTokenProps> = ({
                                        }) => {
   const handlePress = useCallback(() => {
     if (isWord) {
-      onSetActiveIndex(index);
+      onSetActiveIndex(isActive ? null : index);
     }
-  }, [token, onSetActiveIndex, isWord])
+  }, [token, onSetActiveIndex, isWord, isActive])
 
   return <Text
     onPress={handlePress}

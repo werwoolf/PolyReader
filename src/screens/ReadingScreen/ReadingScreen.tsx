@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { styles } from "./styles";
 import TopBar from "./components/TopBar";
@@ -12,11 +12,18 @@ interface ReadingScreenProps {
 }
 
 const ReadingScreen: FC<ReadingScreenProps> = ({ currentPageContent }) => {
-  const originRef = useRef<ScrollView | null>(null);
   const { id } = useParams();
   const [activeWordIndex, setActiveWord] = useState<number | null>(null);
   const [isTranslation, setIsTranslation] = useState<boolean>();
   const [translatedWord, setTranslatedWord] = useState<string | null>(null);
+
+  const currentPageTokens = useMemo(() => {
+    return currentPageContent?.match(/\b\w+\b|[\s,]+|\S/g) || [];
+  }, [currentPageContent]);
+
+  const activeWord = Number.isInteger(activeWordIndex)
+    ? currentPageTokens[activeWordIndex as number]
+    : null;
 
   useEffect(() => {
     setActiveWord(null)
@@ -42,10 +49,6 @@ const ReadingScreen: FC<ReadingScreenProps> = ({ currentPageContent }) => {
         console.log(data);
       });
   }, []);
-
-  const currentPageTokens = useMemo(() => {
-    return currentPageContent?.match(/\b\w+\b|[\s,]+|\S/g) || [];
-  }, [currentPageContent]);
 
   const parsedPageContent = useMemo(() => {
     return currentPageTokens.map((token, index) => {
@@ -101,31 +104,29 @@ const ReadingScreen: FC<ReadingScreenProps> = ({ currentPageContent }) => {
   return (
     <View style={styles.container}>
       {
-        (isTranslation || translatedWord) && <View style={{
-          position: "absolute",
-          width: "100%",
-          top: 45,
-          padding: 10,
-          borderStyle: "solid",
-          borderColor: "grey",
-          borderWidth: 2,
-          backgroundColor: "black"
-        }}>
-          <Text style={{ color: "yellow", fontSize: 18 }}>
+        (isTranslation || (translatedWord && activeWord)) && <View
+          style={{
+            width: "100%",
+            paddingVertical: 10,
+            paddingHorizontal: 5,
+            borderStyle: "solid",
+            borderColor: "grey",
+            borderWidth: 2,
+            backgroundColor: "#ccc"
+          }}
+        >
+          <Text style={{ fontSize: 18 }}>
             {
               isTranslation
                 ? "translation..."
-                : translatedWord
+                : <Text>{currentPageTokens[activeWordIndex || 0]} - {translatedWord}</Text>
             }
           </Text>
         </View>
       }
       <TopBar bookName={""}/>
       <Text>ID: {id}</Text>
-      <ScrollView
-        style={styles.original}
-        ref={originRef}
-      >
+      <ScrollView>
         <Text style={{ fontSize: 25 }}>
           {parsedPageContent}
         </Text>

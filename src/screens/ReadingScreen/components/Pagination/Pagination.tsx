@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FC, useCallback } from "react";
 import { Button, Text, View } from "react-native";
-import { styles } from "../../styles";
+import { styles } from "./styles";
 import { Pagination as PaginationType } from "../../../../store/book/types";
 import { previousPage, nextPage } from "../../../../store/book/slice";
 
