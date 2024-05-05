@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FC } from "react";
 import { Text } from "react-native";
-import Screen from "../../components/Screen"
+import Screen from "../../components/Screen";
 
 interface UserScreenProps {
 }

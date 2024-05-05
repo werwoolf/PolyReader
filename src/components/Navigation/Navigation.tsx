@@ -21,6 +21,9 @@ const Navigation: FC<NavigationProps> = () => {
         navItems.map(({ icon: Icon, name, path }) => <TouchableOpacity
           key={path}
           onPress={() => navigate(path)}
+          style={{
+            paddingHorizontal: 10
+          }}
         >
           <Icon
             name={name}
@@ -28,7 +31,7 @@ const Navigation: FC<NavigationProps> = () => {
             color={path === pathname
               ? "black"
               : "grey"
-          }
+            }
           />
         </TouchableOpacity>)
       }

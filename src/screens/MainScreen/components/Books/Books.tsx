@@ -2,9 +2,9 @@ import * as React from "react";
 import { FC } from "react";
 import { ScrollView, Text, TouchableOpacity } from "react-native";
 import { ROUTES_PATH } from "../../../../defaults/ROUTES_PATH";
-import { useNavigate } from "react-router-native";
 import { Book } from "../../../../store/books/types";
 import { styles } from "./styles";
+import { useNavigate } from "react-router-native";
 
 interface BooksProps {
   books: Book[],

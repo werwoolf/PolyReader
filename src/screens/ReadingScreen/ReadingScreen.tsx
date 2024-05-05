@@ -3,16 +3,17 @@ import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { styles } from "./styles";
 import TopBar from "./components/TopBar";
-import { useParams } from "react-router-native";
 import Pagination from "./components/Pagination";
 import TextToken from "./components/TextToken";
+import Screen from "../../components/Screen";
+import { Book } from "../../store/books/types";
 
 interface ReadingScreenProps {
-  currentPageContent: string
+  currentPageContent: string;
+  book: Book | null
 }
 
-const ReadingScreen: FC<ReadingScreenProps> = ({ currentPageContent }) => {
-  const { id } = useParams();
+const ReadingScreen: FC<ReadingScreenProps> = ({ currentPageContent, book }) => {
   const [activeWordIndex, setActiveWord] = useState<number | null>(null);
   const [isTranslation, setIsTranslation] = useState<boolean>();
   const [translatedWord, setTranslatedWord] = useState<string | null>(null);
@@ -26,7 +27,7 @@ const ReadingScreen: FC<ReadingScreenProps> = ({ currentPageContent }) => {
     : null;
 
   useEffect(() => {
-    setActiveWord(null)
+    setActiveWord(null);
   }, [currentPageContent]);
 
   useEffect(() => {
@@ -40,7 +41,7 @@ const ReadingScreen: FC<ReadingScreenProps> = ({ currentPageContent }) => {
         "from": "eng",
         "to": "ukr",
         "input": "cloud",
-        "options": { "origin": "translation.web", }
+        "options": { "origin": "translation.web" }
       }),
       "method": "POST"
     })
@@ -48,7 +49,8 @@ const ReadingScreen: FC<ReadingScreenProps> = ({ currentPageContent }) => {
       .then(data => {
         console.log(data);
       });
-  }, []);
+  }, [activeWordIndex]);
+
 
   const parsedPageContent = useMemo(() => {
     return currentPageTokens.map((token, index) => {
@@ -61,13 +63,13 @@ const ReadingScreen: FC<ReadingScreenProps> = ({ currentPageContent }) => {
         index={index}
         isWord={isWord}
         onSetActiveIndex={setActiveWord}
-      />
+      />;
     });
   }, [currentPageTokens, activeWordIndex]);
 
   const handleTranslateWord = useCallback(async (word: string) => {
     try {
-      setIsTranslation(true)
+      setIsTranslation(true);
       const rawRes = await fetch("https://api.reverso.net/translate/v1/translation", {
         "headers": {
           "content-type": "application/json",
@@ -83,47 +85,46 @@ const ReadingScreen: FC<ReadingScreenProps> = ({ currentPageContent }) => {
         }),
         "method": "POST"
       });
-      console.log(rawRes.status)
+      console.log(rawRes.status);
       const resJson = await rawRes.json();
 
       setTranslatedWord(resJson.translation[0]);
 
     } catch (e) {
-      console.log("CATCH error: ", e)
+      console.log("CATCH error: ", e);
     } finally {
-      setIsTranslation(false)
+      setIsTranslation(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (!activeWordIndex) return;
-    handleTranslateWord(currentPageTokens[activeWordIndex])
-  }, [activeWordIndex, currentPageTokens]);
+    handleTranslateWord(currentPageTokens[activeWordIndex]);
+  }, [activeWordIndex, currentPageTokens, handleTranslateWord]);
 
-  // if (!book) return <Text>"...loading"</Text>;
   return (
-    <View style={styles.container}>
-      {
-        (isTranslation || (translatedWord && activeWord)) && <View
-          style={styles.translation}
-        >
-          <Text style={{ fontSize: 18 }}>
-            {
-              isTranslation
-                ? "translation..."
-                : <Text>{currentPageTokens[activeWordIndex || 0]} - {translatedWord}</Text>
-            }
+    <Screen navigation={false}>
+        <TopBar bookName={book?.name || ""}/>
+        {
+          (isTranslation || (translatedWord && activeWord)) && <View
+            style={styles.translationContainer}
+          >
+            <Text style={styles.translation}>
+              {
+                isTranslation
+                  ? "translation..."
+                  : <Text>{currentPageTokens[activeWordIndex || 0]} - {translatedWord}</Text>
+              }
+            </Text>
+          </View>
+        }
+        <ScrollView>
+          <Text style={styles.original}>
+            {parsedPageContent}
           </Text>
-        </View>
-      }
-      <TopBar bookName={""}/>
-      <ScrollView>
-        <Text style={{ fontSize: 25 }}>
-          {parsedPageContent}
-        </Text>
-        <Pagination/>
-      </ScrollView>
-    </View>
+          <Pagination/>
+        </ScrollView>
+    </Screen>
   );
 };
 

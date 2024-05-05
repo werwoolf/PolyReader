@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FC, } from "react";
+import { FC } from "react";
 import { View } from "react-native";
 import Navigation from "../Navigation";
 
@@ -13,7 +13,8 @@ const Screen: FC<ScreenProps> = ({ navigation, children }) => {
     <View style={{
       height: "100%",
       padding: 10,
-      paddingTop: 40,
+      paddingBottom: 20,
+      paddingTop: 40
 
     }}>
       <View style={{

@@ -1,3 +1,3 @@
-import StatisticScreen from './StatisticScreen';
+import StatisticScreen from "./StatisticScreen";
 
 export default StatisticScreen;

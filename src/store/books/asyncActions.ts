@@ -12,10 +12,10 @@ export const getBooks = createAsyncThunk("get_books", async () => {
 
 export const addBook = createAsyncThunk<void, Omit<Book, "id">>(
   "add_book_async",
-  async (book) => {
+  async book => {
     await db.execAsync(
       [{
-        sql: 'INSERT INTO books (name, text) VALUES (?, ?);',
+        sql: "INSERT INTO books (name, text) VALUES (?, ?);",
         args: [book.name, book.text]
       }],
       false

@@ -1,12 +1,12 @@
 import * as React from "react";
 import { FC, useCallback, useEffect } from "react";
 import { Button, View, Text } from "react-native";
-import * as DocumentPicker from "expo-document-picker";
-import * as FileSystem from "expo-file-system";
 import { addBook } from "../../store/books/asyncActions";
-import { HandleThunkActionCreator } from "react-redux";
 import Books from "./components/Books";
 import Screen from "../../components/Screen";
+import * as DocumentPicker from "expo-document-picker";
+import * as FileSystem from "expo-file-system";
+import { HandleThunkActionCreator } from "react-redux";
 
 interface MainScreenProps {
   getBooks: () => void;
@@ -16,8 +16,8 @@ interface MainScreenProps {
 
 const MainScreen: FC<MainScreenProps> = ({ getBooks, isLoading, addBook }) => {
   useEffect(() => {
-    getBooks()
-  }, []);
+    getBooks();
+  }, [getBooks]);
 
   const pickFile = useCallback(async () => {
     try {
@@ -35,7 +35,7 @@ const MainScreen: FC<MainScreenProps> = ({ getBooks, isLoading, addBook }) => {
         getBooks();
       }
     } catch (err) {
-      console.log("ERROR: ", err)
+      console.log("ERROR: ", err);
     }
   }, [addBook, getBooks]);
   return (

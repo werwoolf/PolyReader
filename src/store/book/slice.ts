@@ -8,13 +8,13 @@ const initialState: BookState = {
   book: null,
   pages: [],
   currentPage: 1,
-  isLoading: false,
+  isLoading: false
 };
 
-const handleStartAsyncAction: CaseReducer<BookState> = (state) => {
+const handleStartAsyncAction: CaseReducer<BookState> = state => {
   state.isLoading = true;
 };
-const handleRejectAsyncAction: CaseReducer<BookState> = (state) => {
+const handleRejectAsyncAction: CaseReducer<BookState> = state => {
   state.isLoading = false;
 };
 
@@ -23,7 +23,7 @@ const handleGetBookFulfilled: CaseReducer<BookState, PayloadAction<Book>> = (sta
   state.pages = splitText(action.payload.text, 5000); // todo: move to config
 };
 
-const handleDeleteBookFulfilled: CaseReducer<BookState> = (state) => {
+const handleDeleteBookFulfilled: CaseReducer<BookState> = state => {
   state.isLoading = false;
 };
 
@@ -32,10 +32,10 @@ const slice = createSlice({
   name: "book",
   initialState,
   reducers: {
-    previousPage: (state) => {
+    previousPage: state => {
       state.currentPage -= 1;
     },
-    nextPage: (state) => {
+    nextPage: state => {
       state.currentPage += 1;
     },
     clearState: () => initialState

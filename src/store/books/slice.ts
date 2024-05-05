@@ -7,10 +7,10 @@ const initialState: BooksState = {
   isLoading: false
 };
 
-const handleAsyncActionStart: CaseReducer<BooksState> = (state) => {
+const handleAsyncActionStart: CaseReducer<BooksState> = state => {
   state.isLoading = true;
 };
-const handleAsyncActionRejected: CaseReducer<BooksState> = (state) => {
+const handleAsyncActionRejected: CaseReducer<BooksState> = state => {
   state.isLoading = false;
 };
 
@@ -20,7 +20,7 @@ const handleGetBooksFulfilled: CaseReducer<BooksState, PayloadAction<Book[]>> = 
   state.isLoading = false;
 };
 
-const handleAddBookFulfilled: CaseReducer<BooksState> = (state) => {
+const handleAddBookFulfilled: CaseReducer<BooksState> = state => {
   state.isLoading = false;
 };
 

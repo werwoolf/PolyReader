@@ -1,8 +1,8 @@
 import Pagination from "./Pagination";
-import { createStructuredSelector } from "reselect";
 import { pagination } from "../../../../store/book/selectors";
-import { connect } from "react-redux";
 import { nextPage, previousPage } from "../../../../store/book/slice";
+import { createStructuredSelector } from "reselect";
+import { connect } from "react-redux";
 
 const mapState = createStructuredSelector({ pagination });
 

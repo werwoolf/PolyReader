@@ -21,8 +21,7 @@ const TextToken: FC<TextTokenProps> = ({
     if (isWord) {
       onSetActiveIndex(isActive ? null : index);
     }
-  }, [token, onSetActiveIndex, isWord, isActive])
-
+  }, [isWord, onSetActiveIndex, isActive, index]);
   return <Text
     onPress={handlePress}
     style={{

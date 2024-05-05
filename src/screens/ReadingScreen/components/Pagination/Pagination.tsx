@@ -20,11 +20,11 @@ const Pagination: FC<PaginationProps> = ({
 
   const handlePreviousPage = useCallback(()=>{
     previousPage();
-  }, []);
+  }, [previousPage]);
 
   const handleNextPage = useCallback(()=>{
     nextPage();
-  }, []);
+  }, [nextPage]);
   return (
     <View style={styles.pagination}>
       <Button

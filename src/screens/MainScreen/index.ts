@@ -1,8 +1,8 @@
 import MainScreen from "./MainScreen";
 import { books, isLoading } from "../../store/books/selectors";
+import { addBook, getBooks } from "../../store/books/asyncActions";
 import { createStructuredSelector } from "reselect";
 import { connect } from "react-redux";
-import { addBook, getBooks } from "../../store/books/asyncActions";
 
 const mapState = createStructuredSelector({ books, isLoading });
 

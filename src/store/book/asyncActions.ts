@@ -1,11 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { db } from "../../utils/initDB";
-import get from "lodash/get";
 import { Book } from "../books/types";
+import get from "lodash/get";
 
 export const getBook = createAsyncThunk<Book, number>(
   "get_book",
-  async (id) => {
+  async id => {
     const res = await db.execAsync(
       [{ sql: "SELECT * FROM books WHERE id = ?;", args: [id] }], true
     );
@@ -16,7 +16,7 @@ export const getBook = createAsyncThunk<Book, number>(
 
 export const deleteBook = createAsyncThunk<Book | null, number>(
   "delete_book",
-  async (id) => {
+  async id => {
     const res = await db.execAsync(
       [{ sql: "DELETE FROM books WHERE id = ?;", args: [id] }], false
     );
