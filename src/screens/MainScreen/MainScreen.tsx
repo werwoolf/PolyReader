@@ -5,9 +5,8 @@ import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import { addBook } from "../../store/books/asyncActions";
 import { HandleThunkActionCreator } from "react-redux";
-import { styles } from "./styles";
 import Books from "./components/Books";
-import Navigation from "../../components/Navigation";
+import Screen from "../../components/Screen";
 
 interface MainScreenProps {
   getBooks: () => void;
@@ -40,10 +39,8 @@ const MainScreen: FC<MainScreenProps> = ({ getBooks, isLoading, addBook }) => {
     }
   }, [addBook, getBooks]);
   return (
-    <View style={styles.container}>
-      <View style={{
-        display:"flex", gap: 20
-      }}>
+    <Screen navigation>
+      <View style={{ display: "flex", gap: 20 }}>
         <Text>MainScreen</Text>
         <Books/>
         {isLoading && <Text>... loading</Text>}
@@ -52,8 +49,7 @@ const MainScreen: FC<MainScreenProps> = ({ getBooks, isLoading, addBook }) => {
           onPress={pickFile}
         />
       </View>
-      <Navigation/>
-    </View>
+    </Screen>
   );
 };
 
