@@ -101,7 +101,6 @@ const ReadingScreen: FC<ReadingScreenProps> = ({ currentPageContent, book }) => 
     if (!activeWordIndex) return;
     handleTranslateWord(currentPageTokens[activeWordIndex]);
   }, [activeWordIndex, currentPageTokens, handleTranslateWord]);
-
   return (
     <Screen navigation={false}>
         <TopBar bookName={book?.name || ""}/>
