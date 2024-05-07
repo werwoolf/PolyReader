@@ -1,8 +1,11 @@
 import ReadingScreen from "./ReadingScreen";
-import { currentPageContent, book } from "../../store/book/selectors";
+import { currentPageContent, currentPage, book } from "../../store/book/selectors";
+import { updateLastVisitedPage } from "../../store/book/asyncActions";
 import { createStructuredSelector } from "reselect";
 import { connect } from "react-redux";
 
-const mapState = createStructuredSelector({ currentPageContent, book });
+const mapState = createStructuredSelector({ currentPageContent, currentPage, book });
 
-export default connect(mapState)(ReadingScreen);
+const mapDispatch = { updateLastVisitedPage };
+
+export default connect(mapState, mapDispatch)(ReadingScreen);

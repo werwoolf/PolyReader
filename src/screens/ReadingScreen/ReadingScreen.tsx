@@ -7,13 +7,23 @@ import Pagination from "./components/Pagination";
 import TextToken from "./components/TextToken";
 import Screen from "../../components/Screen";
 import { Book } from "../../store/books/types";
+import { updateLastVisitedPage } from "../../store/book/asyncActions";
+import { HandleThunkActionCreator } from "react-redux";
+import { currentPage } from "../../store/book/selectors";
 
 interface ReadingScreenProps {
   currentPageContent: string;
-  book: Book | null
+  book: Book | null;
+  currentPage: number;
+  updateLastVisitedPage: HandleThunkActionCreator<typeof updateLastVisitedPage>;
 }
 
-const ReadingScreen: FC<ReadingScreenProps> = ({ currentPageContent, book }) => {
+const ReadingScreen: FC<ReadingScreenProps> = ({
+                                                 book,
+                                                 currentPage,
+                                                 currentPageContent,
+                                                 updateLastVisitedPage
+}) => {
   const [activeWordIndex, setActiveWord] = useState<number | null>(null);
   const [isTranslation, setIsTranslation] = useState<boolean>();
   const [translatedWord, setTranslatedWord] = useState<string | null>(null);
@@ -29,6 +39,12 @@ const ReadingScreen: FC<ReadingScreenProps> = ({ currentPageContent, book }) => 
   useEffect(() => {
     setActiveWord(null);
   }, [currentPageContent]);
+
+  useEffect(() => {
+    if (book){
+      updateLastVisitedPage({ id: book.id, page: currentPage });
+    }
+  }, [book, currentPage, updateLastVisitedPage]);
 
   useEffect(() => {
     if (!activeWordIndex) return;
@@ -103,26 +119,26 @@ const ReadingScreen: FC<ReadingScreenProps> = ({ currentPageContent, book }) => 
   }, [activeWordIndex, currentPageTokens, handleTranslateWord]);
   return (
     <Screen navigation={false}>
-        <TopBar bookName={book?.name || ""}/>
-        {
-          (isTranslation || (translatedWord && activeWord)) && <View
-            style={styles.translationContainer}
-          >
-            <Text style={styles.translation}>
-              {
-                isTranslation
-                  ? "translation..."
-                  : <Text>{currentPageTokens[activeWordIndex || 0]} - {translatedWord}</Text>
-              }
-            </Text>
-          </View>
-        }
-        <ScrollView>
-          <Text style={styles.original}>
-            {parsedPageContent}
+      <TopBar bookName={book?.name || ""}/>
+      {
+        (isTranslation || (translatedWord && activeWord)) && <View
+          style={styles.translationContainer}
+        >
+          <Text style={styles.translation}>
+            {
+              isTranslation
+                ? "translation..."
+                : <Text>{currentPageTokens[activeWordIndex || 0]} - {translatedWord}</Text>
+            }
           </Text>
-          <Pagination/>
-        </ScrollView>
+        </View>
+      }
+      <ScrollView>
+        <Text style={styles.original}>
+          {parsedPageContent}
+        </Text>
+        <Pagination/>
+      </ScrollView>
     </Screen>
   );
 };
