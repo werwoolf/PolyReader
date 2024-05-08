@@ -17,11 +17,10 @@ export const getBook = createAsyncThunk<Book, number>(
 export const updateLastVisitedPage = createAsyncThunk<void, { id: number, page: number }>(
   "update_last_visited_page",
   async ({ id, page }) => {
-    const res  = await db.execAsync(
+    await db.execAsync(
       [{ sql: "UPDATE books SET last_visited_page = ? WHERE id = ?;", args: [page, id] }],
       false
     );
-    console.log(res)
   });
 
 export const deleteBook = createAsyncThunk<Book | null, number>(

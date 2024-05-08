@@ -1,6 +1,7 @@
 import * as React from "react";
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
+import { SelectableText } from "@alentoma/react-native-selectable-text";
 import { styles } from "./styles";
 import TopBar from "./components/TopBar";
 import Pagination from "./components/Pagination";
@@ -9,7 +10,7 @@ import Screen from "../../components/Screen";
 import { Book } from "../../store/books/types";
 import { updateLastVisitedPage } from "../../store/book/asyncActions";
 import { HandleThunkActionCreator } from "react-redux";
-import { currentPage } from "../../store/book/selectors";
+import "react-native-get-random-values";
 
 interface ReadingScreenProps {
   currentPageContent: string;
@@ -23,7 +24,7 @@ const ReadingScreen: FC<ReadingScreenProps> = ({
                                                  currentPage,
                                                  currentPageContent,
                                                  updateLastVisitedPage
-}) => {
+                                               }) => {
   const [activeWordIndex, setActiveWord] = useState<number | null>(null);
   const [isTranslation, setIsTranslation] = useState<boolean>();
   const [translatedWord, setTranslatedWord] = useState<string | null>(null);
@@ -41,32 +42,10 @@ const ReadingScreen: FC<ReadingScreenProps> = ({
   }, [currentPageContent]);
 
   useEffect(() => {
-    if (book){
+    if (book) {
       updateLastVisitedPage({ id: book.id, page: currentPage });
     }
   }, [book, currentPage, updateLastVisitedPage]);
-
-  useEffect(() => {
-    if (!activeWordIndex) return;
-    fetch("https://api.reverso.net/translate/v1/translation", {
-      "headers": {
-        "content-type": "application/json"
-      },
-      "body": JSON.stringify({
-        "format": "text",
-        "from": "eng",
-        "to": "ukr",
-        "input": "cloud",
-        "options": { "origin": "translation.web" }
-      }),
-      "method": "POST"
-    })
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-      });
-  }, [activeWordIndex]);
-
 
   const parsedPageContent = useMemo(() => {
     return currentPageTokens.map((token, index) => {
@@ -117,6 +96,7 @@ const ReadingScreen: FC<ReadingScreenProps> = ({
     if (!activeWordIndex) return;
     handleTranslateWord(currentPageTokens[activeWordIndex]);
   }, [activeWordIndex, currentPageTokens, handleTranslateWord]);
+
   return (
     <Screen navigation={false}>
       <TopBar bookName={book?.name || ""}/>
@@ -134,9 +114,21 @@ const ReadingScreen: FC<ReadingScreenProps> = ({
         </View>
       }
       <ScrollView>
-        <Text style={styles.original}>
-          {parsedPageContent}
-        </Text>
+        <SelectableText
+          value={currentPageContent}
+          onSelection={()=>{
+            console.log("onSelection");
+          }}
+          // prependToChild={""}
+          menuItems={["123"]}
+           prependToChild={""}
+        />
+        {/*<Text*/}
+        {/*  selectable*/}
+        {/*  style={styles.original}*/}
+        {/*>*/}
+        {/*  {parsedPageContent}*/}
+        {/*</Text>*/}
         <Pagination/>
       </ScrollView>
     </Screen>

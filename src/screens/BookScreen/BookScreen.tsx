@@ -21,7 +21,6 @@ const BookScreen: FC<BookScreenProps> = ({ book, deleteBook, clearState, getBook
   const { id } = useParams();
   const navigate = useNavigate();
 
-  console.log(book?.last_visited_page);
   useEffect(() => {
     if (id) {
       getBook(+id);
