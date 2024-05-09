@@ -13,8 +13,8 @@ const Screen: FC<ScreenProps> = ({ navigation, children }) => {
     <View style={{
       height: "100%",
       padding: 10,
-      paddingBottom: 20,
-      paddingTop: 40
+      paddingBottom: 20
+      // paddingTop: 40
 
     }}>
       <View style={{

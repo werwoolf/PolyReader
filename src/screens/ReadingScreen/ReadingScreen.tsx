@@ -1,11 +1,12 @@
 import * as React from "react";
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView } from "react-native";
 import { SelectableText } from "@alentoma/react-native-selectable-text";
+import { IHighlights } from "@alentoma/react-native-selectable-text/demo/SelectableText";
 import { styles } from "./styles";
 import TopBar from "./components/TopBar";
 import Pagination from "./components/Pagination";
-import TextToken from "./components/TextToken";
+// import TextToken from "./components/TextToken";
 import Screen from "../../components/Screen";
 import { Book } from "../../store/books/types";
 import { updateLastVisitedPage } from "../../store/book/asyncActions";
@@ -29,14 +30,6 @@ const ReadingScreen: FC<ReadingScreenProps> = ({
   const [isTranslation, setIsTranslation] = useState<boolean>();
   const [translatedWord, setTranslatedWord] = useState<string | null>(null);
 
-  const currentPageTokens = useMemo(() => {
-    return currentPageContent?.match(/\b\w+\b|[\s,]+|\S/g) || [];
-  }, [currentPageContent]);
-
-  const activeWord = Number.isInteger(activeWordIndex)
-    ? currentPageTokens[activeWordIndex as number]
-    : null;
-
   useEffect(() => {
     setActiveWord(null);
   }, [currentPageContent]);
@@ -46,21 +39,37 @@ const ReadingScreen: FC<ReadingScreenProps> = ({
       updateLastVisitedPage({ id: book.id, page: currentPage });
     }
   }, [book, currentPage, updateLastVisitedPage]);
+  // console.log("///")
+  // useEffect(() => {
+  //   console.log("effect")
+  //
+  //   const paragraphRegex = /(?:\r\n|\r|\n){2,}/g; // Regular expression to match paragraphs
+  //   const paragraphs = currentPageContent.split(paragraphRegex);
+  //   console.log(paragraphs)
+  // }, [currentPageContent]);
 
-  const parsedPageContent = useMemo(() => {
-    return currentPageTokens.map((token, index) => {
-      const isWord = /\b\w+\b/.test(token);
+  const words = useMemo(() => {
 
-      return <TextToken
-        key={index}
-        token={token}
-        isActive={index === activeWordIndex}
-        index={index}
-        isWord={isWord}
-        onSetActiveIndex={setActiveWord}
-      />;
-    });
-  }, [currentPageTokens, activeWordIndex]);
+    const res: IHighlights[] = [];
+
+    const wordRegex = /\b\w+\b/g;
+    let match;
+
+    while ((match = wordRegex.exec(currentPageContent)) !== null) {
+      const word = match[0];
+      const start = match.index;
+      const end = start + word.length;
+
+      res.push({
+        end,
+        start,
+        id: res.length.toString(),
+        color: res.length === activeWordIndex ? "yellow" : undefined
+      });
+    }
+
+    return res;
+  }, [activeWordIndex, currentPageContent]);
 
   const handleTranslateWord = useCallback(async (word: string) => {
     try {
@@ -69,7 +78,6 @@ const ReadingScreen: FC<ReadingScreenProps> = ({
         "headers": {
           "content-type": "application/json",
           "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
-
         },
         "body": JSON.stringify({
           "format": "text",
@@ -82,7 +90,7 @@ const ReadingScreen: FC<ReadingScreenProps> = ({
       });
       console.log(rawRes.status);
       const resJson = await rawRes.json();
-
+      console.log(resJson.translation[0]);
       setTranslatedWord(resJson.translation[0]);
 
     } catch (e) {
@@ -92,43 +100,42 @@ const ReadingScreen: FC<ReadingScreenProps> = ({
     }
   }, []);
 
-  useEffect(() => {
-    if (!activeWordIndex) return;
-    handleTranslateWord(currentPageTokens[activeWordIndex]);
-  }, [activeWordIndex, currentPageTokens, handleTranslateWord]);
+  const handlePressHighlightedWord = useCallback((id: string) => {
+    setActiveWord(+id);
+    // const { start, end } = words[+id];
+    // const word = currentPageContent.substring(start, end);
+    //
+    // handleTranslateWord(word);
+  }, [currentPageContent, handleTranslateWord, words]);
 
   return (
     <Screen navigation={false}>
       <TopBar bookName={book?.name || ""}/>
       {
-        (isTranslation || (translatedWord && activeWord)) && <View
-          style={styles.translationContainer}
-        >
-          <Text style={styles.translation}>
-            {
-              isTranslation
-                ? "translation..."
-                : <Text>{currentPageTokens[activeWordIndex || 0]} - {translatedWord}</Text>
-            }
-          </Text>
-        </View>
+        // (isTranslation || (translatedWord && activeWord)) && <View
+        //   style={styles.translationContainer}
+        // >
+        //   <Text style={styles.translation}>
+        //     {
+        //       isTranslation
+        //         ? "translation..."
+        //         : <Text>{currentPageTokens[activeWordIndex || 0]} - {translatedWord}</Text>
+        //     }
+        //   </Text>
+        // </View>
       }
       <ScrollView>
         <SelectableText
           value={currentPageContent}
-          onSelection={()=>{
-            console.log("onSelection");
+          onSelection={e => {
+            handleTranslateWord(e.content);
           }}
-          // prependToChild={""}
-          menuItems={["123"]}
-           prependToChild={""}
+          highlights={words}
+          onHighlightPress={handlePressHighlightedWord}
+          menuItems={["Translate"]}
+          prependToChild={null}
+          style={{ fontSize: 18 }}
         />
-        {/*<Text*/}
-        {/*  selectable*/}
-        {/*  style={styles.original}*/}
-        {/*>*/}
-        {/*  {parsedPageContent}*/}
-        {/*</Text>*/}
         <Pagination/>
       </ScrollView>
     </Screen>

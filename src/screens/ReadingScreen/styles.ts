@@ -22,7 +22,7 @@ export const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: "#eee"
   },
-  translation:{
+  translation: {
     fontSize: 18
   }
 });
