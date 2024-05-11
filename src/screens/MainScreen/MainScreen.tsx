@@ -31,7 +31,7 @@ const MainScreen: FC<MainScreenProps> = ({ getBooks, isLoading, addBook }) => {
         const name = assets[0].name;
         const text = await FileSystem.readAsStringAsync(uri);
 
-        await addBook({ text, name });
+        await addBook({ text, name, last_visited_page: 1 });
         getBooks();
       }
     } catch (err) {

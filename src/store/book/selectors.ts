@@ -11,4 +11,5 @@ export const pagination = createSelector(bookRoot, state => ({
 }));
 
 export const currentPageContent = createSelector(bookRoot, ({ pages, currentPage }) => pages[currentPage - 1]);
+export const statistic = createSelector(bookRoot, ({ statistic }) => statistic);
 export const currentPage = createSelector(bookRoot, ({ currentPage }) => currentPage);

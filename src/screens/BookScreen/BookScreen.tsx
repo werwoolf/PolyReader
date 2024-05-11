@@ -7,8 +7,10 @@ import { Book } from "../../store/books/types";
 import { ROUTES_PATH } from "../../defaults/ROUTES_PATH";
 import Screen from "../../components/Screen";
 import { clearState } from "../../store/book/slice";
+import Statistic from "./components/Statistic";
 import { HandleThunkActionCreator } from "react-redux";
 import { useNavigate, useParams } from "react-router-native";
+import { styles } from "./styles";
 
 interface BookScreenProps {
   book: Book | null;
@@ -17,7 +19,12 @@ interface BookScreenProps {
   deleteBook: HandleThunkActionCreator<typeof deleteBook>;
 }
 
-const BookScreen: FC<BookScreenProps> = ({ book, deleteBook, clearState, getBook }) => {
+const BookScreen: FC<BookScreenProps> = ({
+                                           book,
+                                           getBook,
+                                           deleteBook,
+                                           clearState
+                                         }) => {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -61,24 +68,22 @@ const BookScreen: FC<BookScreenProps> = ({ book, deleteBook, clearState, getBook
   if (!book) return <Text>...loading</Text>;
   return (
     <Screen navigation={false}>
-      <View style={{
-        display: "flex", gap: 10
-      }}>
-        <View style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 10 }}>
+      <View style={styles.wrapper}>
+        <View style={styles.header}>
           <MaterialIcons
             name="arrow-back"
             size={24}
             color="black"
             onPress={handleGoToMain}
           />
-          <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+          <Text style={styles.bookName}>
             {book?.name}
           </Text>
         </View>
 
         <View>
           {
-            book && <Text style={{ fontWeight: "bold" }}>
+            book && <Text style={styles.bookSize}>
               Size: {Math.ceil(book.text.length / 1024)} kb
             </Text>
           }
@@ -92,6 +97,7 @@ const BookScreen: FC<BookScreenProps> = ({ book, deleteBook, clearState, getBook
           title="Read"
           onPress={handleGoToReadBook}
         />
+        <Statistic/>
       </View>
     </Screen>
   );

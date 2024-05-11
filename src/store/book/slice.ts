@@ -3,9 +3,11 @@ import { BookState } from "./types";
 import { getBook, deleteBook } from "./asyncActions";
 import { Book } from "../books/types";
 import { splitText } from "../../helpers/splitText";
+import uniq from "lodash/uniq";
 
 const initialState: BookState = {
   book: null,
+  statistic: null,
   pages: [],
   currentPage: 1,
   isLoading: false
@@ -22,6 +24,25 @@ const handleGetBookFulfilled: CaseReducer<BookState, PayloadAction<Book>> = (sta
   state.book = action.payload;
   state.currentPage = action.payload.last_visited_page || 1;
   state.pages = splitText(action.payload.text, 2000); // todo: move to config
+
+  const start = new Date().getTime();
+
+  const symbols = action.payload.text.length;
+  const words = action.payload.text.split(" ");
+  const normalizedWords = words.map(word=> word
+      .toLowerCase()
+      .replace("\"", "")
+      .replace(",", "")
+      .replace(":", "")
+      .replace(".", "")
+  );
+
+  state.statistic = {
+    totalWords: words.length,
+    uniqueWords: uniq(normalizedWords).length
+  };
+
+  console.log(new Date().getTime() - start);
 };
 
 const handleDeleteBookFulfilled: CaseReducer<BookState> = state => {
