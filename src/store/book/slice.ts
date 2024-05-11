@@ -21,7 +21,7 @@ const handleRejectAsyncAction: CaseReducer<BookState> = state => {
 const handleGetBookFulfilled: CaseReducer<BookState, PayloadAction<Book>> = (state, action) => {
   state.book = action.payload;
   state.currentPage = action.payload.last_visited_page || 1;
-  state.pages = splitText(action.payload.text, 5000); // todo: move to config
+  state.pages = splitText(action.payload.text, 2000); // todo: move to config
 };
 
 const handleDeleteBookFulfilled: CaseReducer<BookState> = state => {
