@@ -1,6 +1,6 @@
 import * as React from "react";
 import { FC, useCallback, useEffect } from "react";
-import { View, Text, Button } from "react-native";
+import { View, Text, Button, BackHandler } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { deleteBook, getBook } from "../../store/book/asyncActions";
 import { Book } from "../../store/books/types";
@@ -42,6 +42,21 @@ const BookScreen: FC<BookScreenProps> = ({ book, deleteBook, clearState, getBook
       navigate(ROUTES_PATH.main);
     }
   }, [deleteBook, id, navigate]);
+
+  const handleBackAction = useCallback(() => {
+    navigate(ROUTES_PATH.main);
+
+    return true;
+  }, [navigate]);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      handleBackAction
+    );
+
+    return () => backHandler.remove();
+  }, [handleBackAction]);
 
   if (!book) return <Text>...loading</Text>;
   return (

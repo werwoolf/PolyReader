@@ -1,18 +1,19 @@
 import * as React from "react";
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
-import { ScrollView, View, Text } from "react-native";
+import { ScrollView, View, Text, BackHandler } from "react-native";
 import { SelectableText } from "@alentoma/react-native-selectable-text";
 import { IHighlights, SelectableTextProps } from "@alentoma/react-native-selectable-text/demo/SelectableText";
 import { styles } from "./styles";
 import TopBar from "./components/TopBar";
 import Pagination from "./components/Pagination";
-// import TextToken from "./components/TextToken";
+import { Translation } from "./data";
 import Screen from "../../components/Screen";
+import { ROUTES_PATH } from "../../defaults/ROUTES_PATH";
 import { Book } from "../../store/books/types";
 import { updateLastVisitedPage } from "../../store/book/asyncActions";
 import { HandleThunkActionCreator } from "react-redux";
 import "react-native-get-random-values";
-import { Translation } from "./data";
+import { useNavigate, useParams } from "react-router-native";
 
 interface ReadingScreenProps {
   currentPageContent: string;
@@ -30,6 +31,8 @@ const ReadingScreen: FC<ReadingScreenProps> = ({
   const [activeWordIndex, setActiveWordIndex] = useState<number | null>(null);
   const [isTranslation, setIsTranslation] = useState<boolean>();
   const [translation, setTranslation] = useState<Translation | null>(null);
+  const navigate = useNavigate();
+  const { id } = useParams();
 
   // const isWordTranslation = translation?.from  todo: check if translation is word
 
@@ -120,7 +123,29 @@ const ReadingScreen: FC<ReadingScreenProps> = ({
 
   const handleTextSelection: SelectableTextProps["onSelection"] = useCallback(e => {
     handleTranslate(e.content);
-  },  [handleTranslate]);
+    setTranslation(null);
+    setActiveWordIndex(null);
+  }, [handleTranslate]);
+
+  const handleBackAction = useCallback(() => {
+    if (activeWordIndex !== null || translation) {
+      setTranslation(null);
+      setActiveWordIndex(null);
+    } else {
+      navigate(ROUTES_PATH.book(id));
+    }
+
+    return true;
+  }, [activeWordIndex, id, navigate, translation]);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      handleBackAction
+    );
+
+    return () => backHandler.remove();
+  }, [handleBackAction]);
 
   return (
     <Screen navigation={false}>
@@ -138,15 +163,21 @@ const ReadingScreen: FC<ReadingScreenProps> = ({
           </Text>
         </View>
       }
-      <ScrollView>
+      <ScrollView style={{ flex: 1 }}>
         <SelectableText
           value={currentPageContent}
           onSelection={handleTextSelection}
           highlights={words}
           onHighlightPress={handlePressHighlightedWord}
           menuItems={["Translate"]}
+          textComponentProps={{
+            onLongPress: () => {
+              // setActiveWordIndex(null);
+              // setTranslation(null);
+            }
+          }}
+          style={{ fontSize: 20 }}
           prependToChild={null}
-          style={{ fontSize: 18 }}
         />
         <Pagination/>
       </ScrollView>
