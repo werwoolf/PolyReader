@@ -9,6 +9,7 @@ import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import { HandleThunkActionCreator } from "react-redux";
 import JSZip from "jszip";
+import { BookService } from "../../services/book.service";
 
 interface MainScreenProps {
   getBooks: () => void;
@@ -16,7 +17,6 @@ interface MainScreenProps {
   addBook: HandleThunkActionCreator<typeof addBook>
 }
 
-console.log("////////////////////////")
 const MainScreen: FC<MainScreenProps> = ({ getBooks, isLoading, addBook }) => {
   useEffect(() => {
     getBooks();
@@ -29,29 +29,34 @@ const MainScreen: FC<MainScreenProps> = ({ getBooks, isLoading, addBook }) => {
     const { assets, canceled } = res;
 
 
-    if (assets) {
-      try {
-        const uri = assets[0].uri;
-        const name = assets[0].name;
-        const text = await FileSystem.readAsStringAsync(uri, { encoding: "base64" });
-
-        const zip = await JSZip.loadAsync(text, { base64: true });
-
-        for await (const [key, file] of Object.entries(zip.files)) {
-          console.log("start: ", file.name);
-          const res = await file.async("text");
-
-          // if (file.name.startsWith("OEBPS/3599586769249772871_73604-h-0.htm.html")){
-            console.log(res)
-          // }
-
-        }
-
-      } catch (e) {
-        console.log(e)
-      }
-
+    if (assets && !canceled) {
+      const bookService = new BookService(assets[0].uri);
+      const book = await bookService.readFile(assets[0].uri);
+      console.log(book);
     }
+    // try {
+    //   const uri = assets[0].uri;
+    //   const name = assets[0].name;
+    //   const text = await FileSystem.readAsStringAsync(uri);
+    //
+    //   console.log(text)
+
+    // const zip = await JSZip.loadAsync(text, { base64: true });
+    //
+    // for await (const [key, file] of Object.entries(zip.files)) {
+    //   console.log("start: ", file.name);
+    //   const res = await file.async("text");
+    //
+    //   // if (file.name.startsWith("OEBPS/3599586769249772871_73604-h-0.htm.html")){
+    //     console.log(res)
+    // }
+
+    // }
+
+    // } catch (e) {
+    //   console.log(e)
+    // }
+
 
     // try {
     //   const res = await DocumentPicker.getDocumentAsync({
