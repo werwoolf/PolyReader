@@ -13,5 +13,11 @@ export const styles = StyleSheet.create({
   },
   translation: {
     fontSize: 18
+  },
+  textWrapper: {
+    flex: 1
+  },
+  text: {
+    fontSize: 20
   }
 });

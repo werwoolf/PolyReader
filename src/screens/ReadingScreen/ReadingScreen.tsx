@@ -6,7 +6,7 @@ import { IHighlights, SelectableTextProps } from "@alentoma/react-native-selecta
 import { styles } from "./styles";
 import TopBar from "./components/TopBar";
 import Pagination from "./components/Pagination";
-import { Translation } from "./data";
+import { selectableTextComponentProps, Translation } from "./data";
 import Screen from "../../components/Screen";
 import { ROUTES_PATH } from "../../defaults/ROUTES_PATH";
 import { Book } from "../../store/books/types";
@@ -34,7 +34,7 @@ const ReadingScreen: FC<ReadingScreenProps> = ({
   const navigate = useNavigate();
   const { id } = useParams();
 
-  // const isWordTranslation = translation?.from  todo: check if translation is word
+  // const isWordTranslation = translation?.from  todo: check if translation is word + split onto paragraphs
 
   useEffect(() => {
     setActiveWordIndex(null);
@@ -45,14 +45,6 @@ const ReadingScreen: FC<ReadingScreenProps> = ({
       updateLastVisitedPage({ id: book.id, page: currentPage });
     }
   }, [book, currentPage, updateLastVisitedPage]);
-  // console.log("///")
-  // useEffect(() => {
-  //   console.log("effect")
-  //
-  //   const paragraphRegex = /(?:\r\n|\r|\n){2,}/g; // Regular expression to match paragraphs
-  //   const paragraphs = currentPageContent.split(paragraphRegex);
-  //   console.log(paragraphs)
-  // }, [currentPageContent]);
 
   const words = useMemo(() => {
 
@@ -163,20 +155,15 @@ const ReadingScreen: FC<ReadingScreenProps> = ({
           </Text>
         </View>
       }
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={styles.textWrapper}>
         <SelectableText
           value={currentPageContent}
           onSelection={handleTextSelection}
           highlights={words}
           onHighlightPress={handlePressHighlightedWord}
           menuItems={["Translate"]}
-          textComponentProps={{
-            onLongPress: () => {
-              // setActiveWordIndex(null);
-              // setTranslation(null);
-            }
-          }}
-          style={{ fontSize: 20 }}
+          textComponentProps={selectableTextComponentProps}
+          style={styles.text}
           prependToChild={null}
         />
         <Pagination/>

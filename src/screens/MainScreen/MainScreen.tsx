@@ -4,6 +4,7 @@ import { Button, View, Text } from "react-native";
 import { addBook } from "../../store/books/asyncActions";
 import Books from "./components/Books";
 import Screen from "../../components/Screen";
+import { styles } from "./styles";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import { HandleThunkActionCreator } from "react-redux";
@@ -40,7 +41,7 @@ const MainScreen: FC<MainScreenProps> = ({ getBooks, isLoading, addBook }) => {
   }, [addBook, getBooks]);
   return (
     <Screen navigation>
-      <View style={{ display: "flex", gap: 20 }}>
+      <View style={styles.container}>
         <Text>MainScreen</Text>
         <Books/>
         {isLoading && <Text>... loading</Text>}

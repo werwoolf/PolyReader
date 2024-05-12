@@ -4,7 +4,18 @@ export const styles = StyleSheet.create({
   pagination: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
+    alignItems: "center",
+    justifyContent: "space-around",
     paddingVertical: 10
+  },
+  button: {
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "black",
+    paddingHorizontal: 8,
+    borderRadius: 4
+  },
+  pagesCount: {
+    fontSize: 28
   }
 });

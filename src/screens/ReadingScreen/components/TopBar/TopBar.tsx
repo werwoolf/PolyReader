@@ -1,8 +1,9 @@
 import * as React from "react";
-import { FC } from "react";
+import { FC, useCallback } from "react";
 import { Text, View } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ROUTES_PATH } from "../../../../defaults/ROUTES_PATH";
+import { styles } from "./styles";
 import { useNavigate, useParams } from "react-router-native";
 
 interface TopBarProps {
@@ -12,25 +13,19 @@ interface TopBarProps {
 const TopBar: FC<TopBarProps> = ({ bookName }) => {
   const navigate = useNavigate();
   const { id } = useParams();
+
+  const handleGoToBook = useCallback(() => navigate(ROUTES_PATH.book(id)), [id, navigate]);
+
   return (
-    <View style={{
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 10
-    }}>
+    <View style={styles.container}>
       <MaterialIcons
         name="arrow-back"
         size={24}
         color="black"
-        onPress={() => navigate(ROUTES_PATH.book(id))}
+        onPress={handleGoToBook}
       />
       <Text
-        style={{
-          fontWeight: "900",
-          fontSize: 20,
-          alignSelf: "center", width: "90%"
-      }}
+        style={styles.bookName}
         numberOfLines={1}
         ellipsizeMode="tail"
       >

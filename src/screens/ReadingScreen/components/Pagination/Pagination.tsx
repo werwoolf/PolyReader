@@ -1,6 +1,7 @@
 import * as React from "react";
 import { FC, useCallback } from "react";
-import { Button, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 import { styles } from "./styles";
 import { Pagination as PaginationType } from "../../../../store/book/types";
 import { previousPage, nextPage } from "../../../../store/book/slice";
@@ -18,27 +19,34 @@ const Pagination: FC<PaginationProps> = ({
                                          }) => {
   const { currentPage, pages } = pagination;
 
-  const handlePreviousPage = useCallback(()=>{
+  const isPossibleBack = currentPage > 1;
+  const isPossibleForward = currentPage < pages;
+
+  const handlePreviousPage = useCallback(() => {
     previousPage();
   }, [previousPage]);
 
-  const handleNextPage = useCallback(()=>{
+  const handleNextPage = useCallback(() => {
     nextPage();
   }, [nextPage]);
   return (
     <View style={styles.pagination}>
-      <Button
-        title={"previous"}
-        disabled={currentPage < 1}
-        onPress={handlePreviousPage}
+      <AntDesign
+        size={28}
+        color={isPossibleBack ? "black" : "grey"}
+        name="arrowleft"
+        style={styles.button}
+        onPress={isPossibleBack ? handlePreviousPage : undefined}
       />
-      <Text style={{ fontSize: 30 }}>
+      <Text style={styles.pagesCount}>
         {currentPage} / {pages}
       </Text>
-      <Button
-        title={"next"}
-        disabled={currentPage >= pages}
-        onPress={handleNextPage}
+      <AntDesign
+        name="arrowright"
+        size={28}
+        color={isPossibleForward ? "black" : "grey"}
+        style={styles.button}
+        onPress={isPossibleForward ? handleNextPage : undefined}
       />
     </View>
   );
