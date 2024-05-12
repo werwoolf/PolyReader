@@ -8,6 +8,7 @@ import { styles } from "./styles";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import { HandleThunkActionCreator } from "react-redux";
+import JSZip from "jszip";
 
 interface MainScreenProps {
   getBooks: () => void;
@@ -15,29 +16,60 @@ interface MainScreenProps {
   addBook: HandleThunkActionCreator<typeof addBook>
 }
 
+console.log("////////////////////////")
 const MainScreen: FC<MainScreenProps> = ({ getBooks, isLoading, addBook }) => {
   useEffect(() => {
     getBooks();
   }, [getBooks]);
 
   const pickFile = useCallback(async () => {
-    try {
-      const res = await DocumentPicker.getDocumentAsync({
-        multiple: false, type: "text/plain"
-      });
-      const { assets, canceled } = res;
+    const res = await DocumentPicker.getDocumentAsync({
+      multiple: false, type: ["text/plain", "application/epub+zip"]
+    });
+    const { assets, canceled } = res;
 
-      if (assets && !canceled) {
+
+    if (assets) {
+      try {
         const uri = assets[0].uri;
         const name = assets[0].name;
-        const text = await FileSystem.readAsStringAsync(uri);
+        const text = await FileSystem.readAsStringAsync(uri, { encoding: "base64" });
 
-        await addBook({ text, name, last_visited_page: 1 });
-        getBooks();
+        const zip = await JSZip.loadAsync(text, { base64: true });
+
+        for await (const [key, file] of Object.entries(zip.files)) {
+          console.log("start: ", file.name);
+          const res = await file.async("text");
+
+          // if (file.name.startsWith("OEBPS/3599586769249772871_73604-h-0.htm.html")){
+            console.log(res)
+          // }
+
+        }
+
+      } catch (e) {
+        console.log(e)
       }
-    } catch (err) {
-      console.log("ERROR: ", err);
+
     }
+
+    // try {
+    //   const res = await DocumentPicker.getDocumentAsync({
+    //     multiple: false, type: ["text/plain", "application/epub+zip"]
+    //   });
+    //   const { assets, canceled } = res;
+    //
+    //   if (assets && !canceled) {
+    //     const uri = assets[0].uri;
+    //     const name = assets[0].name;
+    //     const text = await FileSystem.readAsStringAsync(uri);
+    //
+    //     await addBook({ text, name, last_visited_page: 1 });
+    //     getBooks();
+    //   }
+    // } catch (err) {
+    //   console.log("ERROR: ", err);
+    // }
   }, [addBook, getBooks]);
   return (
     <Screen navigation>

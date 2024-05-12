@@ -4,6 +4,8 @@ import { getBook, deleteBook } from "./asyncActions";
 import { Book } from "../books/types";
 import { splitText } from "../../helpers/splitText";
 import uniq from "lodash/uniq";
+import JSZip from "jszip";
+
 
 const initialState: BookState = {
   book: null,
@@ -21,28 +23,36 @@ const handleRejectAsyncAction: CaseReducer<BookState> = state => {
 };
 
 const handleGetBookFulfilled: CaseReducer<BookState, PayloadAction<Book>> = (state, action) => {
-  state.book = action.payload;
-  state.currentPage = action.payload.last_visited_page || 1;
-  state.pages = splitText(action.payload.text, 2000); // todo: move to config
+  console.log("handleGetBookFulfilled", action.payload.name)
 
-  const start = new Date().getTime();
+  JSZip
+    .loadAsync(action.payload.text)
+    .then(console.log)
+    .catch(console.log)
+  ;
 
-  const symbols = action.payload.text.length;
-  const words = action.payload.text.split(" ");
-  const normalizedWords = words.map(word=> word
-      .toLowerCase()
-      .replace("\"", "")
-      .replace(",", "")
-      .replace(":", "")
-      .replace(".", "")
-  );
-
-  state.statistic = {
-    totalWords: words.length,
-    uniqueWords: uniq(normalizedWords).length
-  };
-
-  console.log(new Date().getTime() - start);
+  // state.book = action.payload;
+  // state.currentPage = action.payload.last_visited_page || 1;
+  // state.pages = splitText(action.payload.text, 2000); // todo: move to config
+  //
+  // const start = new Date().getTime();
+  //
+  // // const symbols = action.payload.text.length;
+  // const words = action.payload.text.split(" ");
+  // const normalizedWords = words.map(word=> word
+  //     .toLowerCase()
+  //     .replace("\"", "")
+  //     .replace(",", "")
+  //     .replace(":", "")
+  //     .replace(".", "")
+  // );
+  //
+  // state.statistic = {
+  //   totalWords: words.length,
+  //   uniqueWords: uniq(normalizedWords).length
+  // };
+  //
+  // console.log(new Date().getTime() - start);
 };
 
 const handleDeleteBookFulfilled: CaseReducer<BookState> = state => {

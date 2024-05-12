@@ -12,6 +12,7 @@ interface BooksProps {
 
 const Books: FC<BooksProps> = ({ books }) => {
   const navigate = useNavigate();
+
   return (
     <ScrollView
       horizontal
@@ -22,7 +23,6 @@ const Books: FC<BooksProps> = ({ books }) => {
           key={index}
           style={styles.book}
           onPress={() => navigate(ROUTES_PATH.book(book.id.toString()))}
-          // onTouchEnd={() => navigate(ROUTES_PATH.bookReading(book.id.toString()))}
         >
           <Text>{book.name}</Text>
         </TouchableOpacity>)

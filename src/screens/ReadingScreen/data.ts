@@ -6,3 +6,9 @@ export type Translation = {
 export const selectableTextComponentProps = {
   onLongPress: () => {}
 };
+
+export enum SelectionMenuItemsEnum {
+  Translate = "Translate"
+}
+
+export const selectionMenuItems: SelectionMenuItemsEnum[] = [SelectionMenuItemsEnum.Translate];

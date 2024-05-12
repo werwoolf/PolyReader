@@ -6,7 +6,7 @@ import { IHighlights, SelectableTextProps } from "@alentoma/react-native-selecta
 import { styles } from "./styles";
 import TopBar from "./components/TopBar";
 import Pagination from "./components/Pagination";
-import { selectableTextComponentProps, Translation } from "./data";
+import { selectableTextComponentProps, selectionMenuItems, SelectionMenuItemsEnum, Translation } from "./data";
 import Screen from "../../components/Screen";
 import { ROUTES_PATH } from "../../defaults/ROUTES_PATH";
 import { Book } from "../../store/books/types";
@@ -114,9 +114,11 @@ const ReadingScreen: FC<ReadingScreenProps> = ({
   }, [activeWordIndex, currentPageContent, handleTranslate, words]);
 
   const handleTextSelection: SelectableTextProps["onSelection"] = useCallback(e => {
-    handleTranslate(e.content);
-    setTranslation(null);
-    setActiveWordIndex(null);
+    if (e.eventType === SelectionMenuItemsEnum.Translate){
+      handleTranslate(e.content);
+      setTranslation(null);
+      setActiveWordIndex(null);
+    }
   }, [handleTranslate]);
 
   const handleBackAction = useCallback(() => {
@@ -161,7 +163,7 @@ const ReadingScreen: FC<ReadingScreenProps> = ({
           onSelection={handleTextSelection}
           highlights={words}
           onHighlightPress={handlePressHighlightedWord}
-          menuItems={["Translate"]}
+          menuItems={selectionMenuItems}
           textComponentProps={selectableTextComponentProps}
           style={styles.text}
           prependToChild={null}
